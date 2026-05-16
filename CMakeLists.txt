@@ -15,7 +15,7 @@ set(SOURCES
 )
 
 set(HEADERS
-
+        main_window.h
 )
 
 set(UI_FILES
