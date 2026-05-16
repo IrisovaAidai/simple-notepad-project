@@ -1,0 +1,8 @@
+//
+// Created by iriso on 17.05.2026.
+//
+
+#ifndef NOTEPAD_TEXT_TRANSFORM_H
+#define NOTEPAD_TEXT_TRANSFORM_H
+
+#endif //NOTEPAD_TEXT_TRANSFORM_H

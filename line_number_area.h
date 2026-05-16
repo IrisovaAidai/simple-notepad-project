@@ -1,0 +1,8 @@
+//
+// Created by iriso on 17.05.2026.
+//
+
+#ifndef NOTEPAD_LINE_NUMBER_AREA_H
+#define NOTEPAD_LINE_NUMBER_AREA_H
+
+#endif //NOTEPAD_LINE_NUMBER_AREA_H

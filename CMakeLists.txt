@@ -11,15 +11,23 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets PrintSupport)
 
 set(SOURCES
         main.cpp
-
+        main_window.cpp
+        find_replace_dialog.cpp
+        word_frequency_dialog.cpp
 )
 
 set(HEADERS
         main_window.h
+        find_replace_dialog.h
+        word_frequency_dialog.h
+        text_transform.h
+        sort.h
+        line_number_area.h
 )
 
 set(UI_FILES
-        main.cpp
+        find_replace_dialog.ui
+        word_frequency_dialog.ui
 
 )
 
