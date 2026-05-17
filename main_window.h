@@ -6,6 +6,19 @@
 #include <QLabel>
 #include <QTextEdit>
 
+class SpellTextEdit : public QTextEdit {
+    Q_OBJECT
+
+public:
+    explicit SpellTextEdit(SpellChecker* checker, QWidget* parent = nullptr);
+
+protected:
+    void contextMenuEvent(QContextMenuEvent* event) override;
+
+private:
+    SpellChecker* m_checker;
+};
+
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -15,7 +28,6 @@ public:
 
 protected:
     void closeEvent(QCloseEvent* event) override;
-    void contextMenuEvent(QContextMenuEvent* event) override;
 
 private slots:
     // File
@@ -78,7 +90,7 @@ private:
     void applyTransform(std::function<QString(const QString&)> transform);
 
     // Widgets
-    QTextEdit* m_editor = nullptr;
+    SpellTextEdit* m_editor = nullptr;
 
     // Status bar labels
     QLabel* m_wordCountLabel = nullptr;

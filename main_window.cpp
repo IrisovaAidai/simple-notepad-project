@@ -23,24 +23,76 @@
 #include <QTextStream>
 #include <QToolBar>
 
+// ─────────────────────────────────────────────
+// SpellTextEdit — QTextEdit with spell-check context menu
+// ─────────────────────────────────────────────
+
+SpellTextEdit::SpellTextEdit(SpellChecker* checker, QWidget* parent)
+    : QTextEdit(parent)
+    , m_checker(checker)
+{
+}
+
+void SpellTextEdit::contextMenuEvent(QContextMenuEvent* event)
+{
+    QMenu* menu = createStandardContextMenu();
+
+    // Find the word under the cursor at the click position
+    QTextCursor cursor = cursorForPosition(viewport()->mapFromGlobal(event->globalPos()));
+    cursor.select(QTextCursor::WordUnderCursor);
+    QString word = cursor.selectedText();
+
+    if (!word.isEmpty() && !m_checker->isCorrect(word)) {
+        QStringList suggestions = m_checker->suggestions(word);
+        if (!suggestions.isEmpty()) {
+            QMenu* suggestMenu = new QMenu("Spelling suggestions", menu);
+
+            for (const QString& suggestion : suggestions) {
+                QAction* act = suggestMenu->addAction(suggestion);
+                connect(act, &QAction::triggered, this, [this, cursor, suggestion]() mutable {
+                    cursor.insertText(suggestion);
+                });
+            }
+
+            menu->insertSeparator(menu->actions().first());
+            menu->insertMenu(menu->actions().first(), suggestMenu);
+        }
+    }
+
+    menu->exec(event->globalPos());
+    delete menu;
+}
+
+// ─────────────────────────────────────────────
+// MainWindow
+// ─────────────────────────────────────────────
+
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
 {
+    setupSpellChecker();
     setupEditor();
     setupMenuBar();
     setupToolBar();
     setupStatusBar();
-    setupSpellChecker();
 
     update_title();
     resize(900, 650);
 }
 
+void MainWindow::setupSpellChecker()
+{
+    m_spellChecker = new SpellChecker(this);
+    m_spellChecker->loadWordList("data/words.txt");
+}
+
 void MainWindow::setupEditor()
 {
-    m_editor = new QTextEdit(this);
+    m_editor = new SpellTextEdit(m_spellChecker, this);
     m_editor->setAcceptRichText(true);
     setCentralWidget(m_editor);
+
+    m_highlighter = new SpellCheckerHighlighter(m_spellChecker, m_editor->document());
 
     connect(m_editor, &QTextEdit::textChanged, this, [this]() {
         m_modified = true;
@@ -139,15 +191,8 @@ void MainWindow::setupStatusBar()
     statusBar()->addPermanentWidget(m_cursorPosLabel);
 }
 
-void MainWindow::setupSpellChecker()
-{
-    m_spellChecker = new SpellChecker(this);
-    m_spellChecker->loadWordList("data/words.txt");
-    m_highlighter = new SpellCheckerHighlighter(m_spellChecker, m_editor->document());
-}
-
 // ─────────────────────────────────────────────
-// File operations (with exception handling)
+// File operations
 // ─────────────────────────────────────────────
 
 void MainWindow::open_file(const QString& path)
@@ -172,10 +217,6 @@ void MainWindow::save_file(const QString& path)
     QTextStream out(&file);
     out << m_editor->toPlainText();
 }
-
-// ─────────────────────────────────────────────
-// File menu slots
-// ─────────────────────────────────────────────
 
 void MainWindow::newFile()
 {
@@ -244,7 +285,7 @@ void MainWindow::saveFileAs()
 }
 
 // ─────────────────────────────────────────────
-// Edit menu slots
+// Edit
 // ─────────────────────────────────────────────
 
 void MainWindow::undo() { m_editor->undo(); }
@@ -255,7 +296,7 @@ void MainWindow::paste() { m_editor->paste(); }
 void MainWindow::selectAll() { m_editor->selectAll(); }
 
 // ─────────────────────────────────────────────
-// Text transform slots
+// Text transforms
 // ─────────────────────────────────────────────
 
 void MainWindow::applyTransform(std::function<QString(const QString&)> transform)
@@ -274,7 +315,7 @@ void MainWindow::toSentenceCase() { applyTransform(::toSentenceCase); }
 void MainWindow::toSwapCase() { applyTransform(::toSwapCase); }
 
 // ─────────────────────────────────────────────
-// Rich text formatting
+// Rich text
 // ─────────────────────────────────────────────
 
 void MainWindow::toggleBold()
@@ -299,7 +340,7 @@ void MainWindow::toggleUnderline()
 }
 
 // ─────────────────────────────────────────────
-// Optional: Font dialog
+// Optional features
 // ─────────────────────────────────────────────
 
 void MainWindow::openFontDialog()
@@ -320,10 +361,6 @@ void MainWindow::openFontDialog()
     }
 }
 
-// ─────────────────────────────────────────────
-// Optional: Color picker
-// ─────────────────────────────────────────────
-
 void MainWindow::openColorPicker()
 {
     QColor color = QColorDialog::getColor(m_editor->textColor(), this, "Select Text Color");
@@ -337,7 +374,7 @@ void MainWindow::openColorPicker()
 }
 
 // ─────────────────────────────────────────────
-// Find / Replace
+// Dialogs
 // ─────────────────────────────────────────────
 
 void MainWindow::openFindReplace()
@@ -367,10 +404,6 @@ void MainWindow::openFindReplace()
     dialog.exec();
 }
 
-// ─────────────────────────────────────────────
-// Word Frequency
-// ─────────────────────────────────────────────
-
 void MainWindow::openWordFrequency()
 {
     QString text = m_editor->toPlainText().toLower();
@@ -384,10 +417,6 @@ void MainWindow::openWordFrequency()
     WordFrequencyDialog dialog(freq, this);
     dialog.exec();
 }
-
-// ─────────────────────────────────────────────
-// Spell check
-// ─────────────────────────────────────────────
 
 void MainWindow::checkSpelling()
 {
@@ -453,33 +482,4 @@ void MainWindow::closeEvent(QCloseEvent* event)
         event->accept();
     else
         event->ignore();
-}
-
-void MainWindow::contextMenuEvent(QContextMenuEvent* event)
-{
-    QMenu* menu = m_editor->createStandardContextMenu();
-
-    QTextCursor cursor = m_editor->cursorForPosition(m_editor->mapFromGlobal(event->globalPos()));
-    cursor.select(QTextCursor::WordUnderCursor);
-    QString word = cursor.selectedText();
-
-    if (!word.isEmpty() && !m_spellChecker->isCorrect(word)) {
-        QStringList suggestions = m_spellChecker->suggestions(word);
-        if (!suggestions.isEmpty()) {
-            menu->insertSeparator(menu->actions().first());
-            QMenu* suggestMenu = new QMenu("Spelling suggestions", menu);
-
-            for (const QString& suggestion : suggestions) {
-                QAction* act = suggestMenu->addAction(suggestion);
-                connect(act, &QAction::triggered, this, [this, cursor, suggestion]() mutable {
-                    cursor.insertText(suggestion);
-                });
-            }
-
-            menu->insertMenu(menu->actions().first(), suggestMenu);
-        }
-    }
-
-    menu->exec(event->globalPos());
-    delete menu;
 }
