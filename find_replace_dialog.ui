@@ -1,22 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
-    <author/>
-    <comment/>
-    <exportmacro/>
-    <class>find_replace_dialog</class>
-    <widget class="QWidget" name="find_replace_dialog">
+    <class>FindReplaceDialog</class>
+    <widget class="QDialog" name="FindReplaceDialog">
+        <property name="windowTitle">
+            <string>Find / Replace</string>
+        </property>
         <property name="geometry">
             <rect>
                 <x>0</x>
                 <y>0</y>
                 <width>400</width>
-                <height>300</height>
+                <height>160</height>
             </rect>
         </property>
-        <property name="windowTitle">
-            <string>find_replace_dialog</string>
-        </property>
+        <layout class="QVBoxLayout">
+            <item>
+                <layout class="QFormLayout">
+                    <item row="0" column="0">
+                        <widget class="QLabel" name="findLabel">
+                            <property name="text"><string>Find:</string></property>
+                        </widget>
+                    </item>
+                    <item row="0" column="1">
+                        <widget class="QLineEdit" name="findLineEdit"/>
+                    </item>
+                    <item row="1" column="0">
+                        <widget class="QLabel" name="replaceLabel">
+                            <property name="text"><string>Replace:</string></property>
+                        </widget>
+                    </item>
+                    <item row="1" column="1">
+                        <widget class="QLineEdit" name="replaceLineEdit"/>
+                    </item>
+                </layout>
+            </item>
+            <item>
+                <layout class="QHBoxLayout">
+                    <item>
+                        <widget class="QPushButton" name="findNextButton">
+                            <property name="text"><string>Find Next</string></property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QPushButton" name="replaceButton">
+                            <property name="text"><string>Replace</string></property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QPushButton" name="replaceAllButton">
+                            <property name="text"><string>Replace All</string></property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QPushButton" name="closeButton">
+                            <property name="text"><string>Close</string></property>
+                        </widget>
+                    </item>
+                </layout>
+            </item>
+        </layout>
     </widget>
-    <pixmapfunction/>
-    <connections/>
 </ui>

@@ -1,32 +1,25 @@
-//
-// Created by iriso on 17.05.2026.
-//
+#pragma once
 
-#ifndef NOTEPAD_FIND_REPLACE_DIALOG_H
-#define NOTEPAD_FIND_REPLACE_DIALOG_H
-
-#include <QWidget>
-
+#include <QDialog>
 
 QT_BEGIN_NAMESPACE
-
 namespace Ui {
-    class find_replace_dialog;
+    class FindReplaceDialog;
 }
-
 QT_END_NAMESPACE
 
-class find_replace_dialog : public QWidget {
+class FindReplaceDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit find_replace_dialog(QWidget *parent = nullptr);
+    explicit FindReplaceDialog(QWidget* parent = nullptr);
+    ~FindReplaceDialog() override;
 
-    ~find_replace_dialog() override;
+    signals:
+        void findNext(const QString& text);
+    void replace(const QString& find, const QString& replace);
+    void replaceAll(const QString& find, const QString& replace);
 
 private:
-    Ui::find_replace_dialog *ui;
+    Ui::FindReplaceDialog* ui;
 };
-
-
-#endif //NOTEPAD_FIND_REPLACE_DIALOG_H

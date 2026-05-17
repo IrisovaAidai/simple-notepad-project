@@ -1,32 +1,21 @@
-//
-// Created by iriso on 17.05.2026.
-//
+#pragma once
 
-#ifndef NOTEPAD_WORD_FREQUENCY_DIALOG_H
-#define NOTEPAD_WORD_FREQUENCY_DIALOG_H
-
-#include <QWidget>
-
+#include <QDialog>
+#include <QMap>
 
 QT_BEGIN_NAMESPACE
-
 namespace Ui {
-    class word_frequency_dialog;
+    class WordFrequencyDialog;
 }
-
 QT_END_NAMESPACE
 
-class word_frequency_dialog : public QWidget {
+class WordFrequencyDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit word_frequency_dialog(QWidget *parent = nullptr);
-
-    ~word_frequency_dialog() override;
+    explicit WordFrequencyDialog(const QMap<QString, int>& frequency, QWidget* parent = nullptr);
+    ~WordFrequencyDialog() override;
 
 private:
-    Ui::word_frequency_dialog *ui;
+    Ui::WordFrequencyDialog* ui;
 };
-
-
-#endif //NOTEPAD_WORD_FREQUENCY_DIALOG_H

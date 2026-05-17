@@ -1,17 +1,30 @@
-//
-// Created by iriso on 17.05.2026.
-//
-
-// You may need to build the project (run Qt uic code generator) to get "ui_find_replace_dialog.h" resolved
-
 #include "find_replace_dialog.h"
 #include "ui_find_replace_dialog.h"
 
+#include <QPushButton>
 
-find_replace_dialog::find_replace_dialog(QWidget *parent) : QWidget(parent), ui(new Ui::find_replace_dialog) {
+FindReplaceDialog::FindReplaceDialog(QWidget* parent)
+    : QDialog(parent)
+    , ui(new Ui::FindReplaceDialog)
+{
     ui->setupUi(this);
+
+    connect(ui->findNextButton, &QPushButton::clicked, this, [this]() {
+        emit findNext(ui->findLineEdit->text());
+    });
+
+    connect(ui->replaceButton, &QPushButton::clicked, this, [this]() {
+        emit replace(ui->findLineEdit->text(), ui->replaceLineEdit->text());
+    });
+
+    connect(ui->replaceAllButton, &QPushButton::clicked, this, [this]() {
+        emit replaceAll(ui->findLineEdit->text(), ui->replaceLineEdit->text());
+    });
+
+    connect(ui->closeButton, &QPushButton::clicked, this, &QDialog::accept);
 }
 
-find_replace_dialog::~find_replace_dialog() {
+FindReplaceDialog::~FindReplaceDialog()
+{
     delete ui;
 }

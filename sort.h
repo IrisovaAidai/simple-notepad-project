@@ -1,8 +1,15 @@
-//
-// Created by iriso on 17.05.2026.
-//
+#pragma once
 
-#ifndef NOTEPAD_SORT_H
-#define NOTEPAD_SORT_H
+#include <QString>
+#include <QStringList>
 
-#endif //NOTEPAD_SORT_H
+inline QString sortLines(const QString& text, Qt::SortOrder order = Qt::AscendingOrder)
+{
+    QStringList lines = text.split('\n');
+    lines.sort(Qt::CaseInsensitive);
+
+    if (order == Qt::DescendingOrder)
+        std::reverse(lines.begin(), lines.end());
+
+    return lines.join('\n');
+}

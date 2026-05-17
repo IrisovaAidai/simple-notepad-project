@@ -1,22 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
-    <author/>
-    <comment/>
-    <exportmacro/>
-    <class>word_frequency_dialog</class>
-    <widget class="QWidget" name="word_frequency_dialog">
+    <class>WordFrequencyDialog</class>
+    <widget class="QDialog" name="WordFrequencyDialog">
+        <property name="windowTitle">
+            <string>Word Frequency</string>
+        </property>
         <property name="geometry">
             <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>400</width>
-                <height>300</height>
+                <width>350</width>
+                <height>400</height>
             </rect>
         </property>
-        <property name="windowTitle">
-            <string>word_frequency_dialog</string>
-        </property>
+        <layout class="QVBoxLayout">
+            <item>
+                <widget class="QTableWidget" name="frequencyTable">
+                    <property name="columnCount">
+                        <number>2</number>
+                    </property>
+                    <row/>
+                    <column>
+                        <property name="text">
+                            <string>Word</string>
+                        </property>
+                    </column>
+                    <column>
+                        <property name="text">
+                            <string>Count</string>
+                        </property>
+                    </column>
+                </widget>
+            </item>
+            <item>
+                <widget class="QPushButton" name="closeButton">
+                    <property name="text">
+                        <string>Close</string>
+                    </property>
+                </widget>
+            </item>
+        </layout>
     </widget>
-    <pixmapfunction/>
-    <connections/>
 </ui>

@@ -1,8 +1,18 @@
-//
-// Created by iriso on 17.05.2026.
-//
+#pragma once
 
-#ifndef NOTEPAD_LINE_NUMBER_AREA_H
-#define NOTEPAD_LINE_NUMBER_AREA_H
+#include <QWidget>
 
-#endif //NOTEPAD_LINE_NUMBER_AREA_H
+// Forward declaration
+class MainWindow;
+
+// LineNumberArea is a helper for potential future line number display
+// Currently used as a placeholder per project structure requirements
+class LineNumberArea : public QWidget {
+    Q_OBJECT
+
+public:
+    explicit LineNumberArea(QWidget* parent = nullptr)
+        : QWidget(parent)
+    {
+    }
+};

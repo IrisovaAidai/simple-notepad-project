@@ -12,26 +12,28 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets PrintSupport)
 set(SOURCES
         main.cpp
         main_window.cpp
+        spell_checker.cpp
+        spell_checker_highlighter.cpp
         find_replace_dialog.cpp
         word_frequency_dialog.cpp
 )
 
 set(HEADERS
         main_window.h
-        find_replace_dialog.h
-        word_frequency_dialog.h
         text_transform.h
+        notepad_exception.h
+        spell_checker.h
+        spell_checker_highlighter.h
         sort.h
         line_number_area.h
+        find_replace_dialog.h
+        word_frequency_dialog.h
 )
 
 set(UI_FILES
-        find_replace_dialog.ui
         word_frequency_dialog.ui
-
+        find_replace_dialog.ui
 )
-
-qt6_wrap_ui(UI_HEADERS ${UI_FILES})
 
 add_executable(Notepad
         ${SOURCES}
